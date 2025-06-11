@@ -1,4 +1,4 @@
-![GAIH Banner](event banner.png)
+![GAIS Banner](event banner.png)
 
 # 🚀 Global AI Bootcamp – Prompt Engineering with LangChain
 
