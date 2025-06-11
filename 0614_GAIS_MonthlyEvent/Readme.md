@@ -1,5 +1,3 @@
-![GAIS Banner](event banner.png)
-
 # 🚀 Global AI Bootcamp – Prompt Engineering with LangChain
 
 📅 **Date:** 14 June 2025  
@@ -10,6 +8,8 @@
 **Speaker:** Yashasri Gudhe  
 **Topic:** **Prompt Engineering: Unlocking the Power of Generative AI**  
 🛠️ **Live Demo:** LangChain in Action!
+
+![GAIS Banner](event banner.png) 
 
 ---
 ![Information | 100x100](../Information.png)
