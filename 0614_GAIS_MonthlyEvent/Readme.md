@@ -6,12 +6,30 @@
 🔗 **Event Link:** [Register on Meetup](https://www.meetup.com/dot-net-learners-house-hyderabad/events/308109558/?eventOrigin=group_events_list)
 
 **Speaker:** Yashasri Gudhe  
-**Topic:** **Prompt Engineering: Unlocking the Power of Generative AI**  
+**Topic:** **Types of Prompting & Best Practices**  
 🛠️ **Live Demo:** LangChain in Action!
 
 ![GAIS Banner](event banner.png) 
 
 ---
+
+### Software/Tools
+
+> 1. OS: Windows 10/11 x64
+> 1. Python / .NET 8
+> 1. Visual Studio 2022
+> 1. Visual Studio Code
+
+### Prior Knowledge
+
+> 1. Programming knowledge in C# / Python
+
+## Technology Stack
+
+> 1. .NET 8, AI, Open AI
+
+---
+
 ![Information | 100x100](../Information.png)
 
 ---
