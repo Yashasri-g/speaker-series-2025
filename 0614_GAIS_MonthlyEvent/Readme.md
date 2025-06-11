@@ -34,6 +34,14 @@
 
 ---
 
+ ### What are we doing today?
+1. Understanding Prompt Engineering
+2. What is prompting and why it matters in AI.
+3. How prompts guide reasoning and improve accuracy.
+4. Real-world use cases with simple examples.
+
+---
+
 ![Seatbelt| 100x100](../SeatBelt.png)
 
 ---
