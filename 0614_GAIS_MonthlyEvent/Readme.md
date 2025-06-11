@@ -9,7 +9,7 @@
 **Topic:** **Types of Prompting & Best Practices**  
 🛠️ **Live Demo:** LangChain in Action!
 
-![GAIS Banner](event banner.png) 
+![GAIS Banner | 100x100](../eventbanner.jpeg) 
 
 ---
 
