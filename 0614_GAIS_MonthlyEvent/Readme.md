@@ -53,32 +53,42 @@ It helps guide the model’s reasoning, improve accuracy, and ensure structured 
 
 ---
 
-## 🧰 Types of Prompting Techniques
+## Types of Prompting Techniques
+---
 
-### 1. Zero-Shot Prompting
+## 1. Single-Turn Prompting
 
-> Ask the model to perform a task without giving any examples. Best for simple, common tasks.
+**Definition:**  
+A basic one-shot interaction where a single prompt yields a single response.  
+Useful for simple tasks without context.
 
-**Use Cases:**
-- Summarization  
-- Translation  
-- Direct question answering  
-
+**Example:**
 ```text
-Summarize the sentence: "Artificial intelligence is a rapidly growing field that focuses on building systems capable of performing tasks that typically require human intelligence."
+Translate "Bonjour" to English.
 ```
 
 ---
 
-### 2. Few-Shot Prompting
+## 2. Zero-Shot Prompting
 
-> Provide 2–3 examples to show the model what kind of response is expected.
+**Definition:**  
+Ask the model to perform a task without providing any examples.  
+Best for general-purpose queries the model is likely pre-trained on.
 
-**Use Cases:**
-- Text formatting
-- Pattern matching
-- Style transfer
+**Example:**
+```text
+Summarize: "Artificial intelligence is a field focused on building systems that mimic human intelligence."
+```
 
+---
+
+## 3.Few-Shot Prompting
+
+**Definition:**  
+Provide 2–3 examples to show what kind of answer is expected.  
+Helps the model learn the desired pattern.
+
+**Example:**
 ```text
 Q: Convert 'data science' to PascalCase  
 A: DataScience  
@@ -88,84 +98,110 @@ Q: Convert 'account settings' to PascalCase
 A:
 ```
 
+**Bad Prompt:**
+```text
+data science -> ?
+student login ->
+```
+**Why it's wrong:** Missing consistent format (Q/A), and ambiguous intention.
+
 ---
 
-### 3. Chain-of-Thought Prompting
+## 4.Multi-Turn Prompting
 
-> Guide the model to explain its reasoning step-by-step.
+**Definition:**  
+A conversation-like interaction with multiple back-and-forth prompts.  
+Ideal for scenarios requiring memory of prior context.
 
-**Use Cases:**
-- Math problems
-- Code analysis
-- Logical reasoning
-
+**Example:**
 ```text
-Q: There are 10 cookies. Alice eats 3, and Bob eats 2. How many are left?  
+User: What's the capital of France?  
+AI: Paris  
+User: How far is it from Berlin?  
+AI: Approximately 1,050 km by road.
+```
+
+---
+
+## 5.Role Prompting
+
+**Definition:**  
+Assign a persona or role to guide the tone, detail, or depth of the answer.  
+Useful in simulations, teaching, or reviews.
+
+**Example:**
+```text
+You are a senior software engineer.  
+Please review the following backend code for performance.
+```
+
+**Bad Prompt:**
+```text
+Review this.
+```
+**Why it's wrong:** No context or role – too vague.
+
+---
+
+## 6. Chain-of-Thought Prompting (CoT)
+
+**Definition:**  
+Encourages the model to reason step-by-step before answering.  
+Improves performance on math, logic, and planning tasks.
+
+**Example:**
+```text
+Q: There are 10 apples. Alice eats 4, Bob eats 2. How many are left?  
 Let's think step-by-step.
 ```
 
+**Bad Prompt:**
+```text
+10 apples, 4 eaten, 2 eaten. How many left?
+```
+**Why it's wrong:** Lacks reasoning guidance and structured format.
+
 ---
 
-### 4. Prompt Chaining
+## 7. Prompt Chaining
 
-> Break down complex tasks into multiple connected prompts.
+**Definition:**  
+Break a large task into smaller, logically connected prompts.  
+Essential for workflows, automation, and integrations.
 
-**Use Cases:**
-- Task automation
-- Multi-step workflows
-
+**Example:**
 ```text
-Step 1 Prompt:  
-Summarize the following GitHub issue: "The login button doesn't work on mobile devices running Safari."
-
-Step 2 Prompt:  
-Write a professional email to the mobile dev team with the summary:  
-"The login button is broken on Safari mobile. Needs urgent fix."
+Step 1: Summarize the issue: "Login button doesn't work on Safari."  
+Step 2: Write a bug report email with that summary.
 ```
 
 ---
 
-### 5. Role Prompting
+## 8. Self-Consistency Prompting
 
-> Assign a persona or role to influence tone or expertise level.
+**Definition:**  
+Generate multiple reasoning paths for the same prompt, then compare to ensure consistent conclusions.  
+Used to verify accuracy and uncover creative variation.
 
-**Use Cases:**
-- Professional reviews
-- Teaching or explaining concepts
-- Simulated interviews
-
+**Example:**
 ```text
-You are a senior software architect.  
-Please review the following microservices design for performance and scalability issues.
+Q: Calculate 15% of 240  
+(Provide multiple ways to arrive at the answer)
 ```
 
 ---
 
-### 6. Self-Consistency Prompting
+## 9. Conversational Prompting (Multi-Turn Memory + Role)
 
-> Run the same prompt multiple times to compare answers.
+**Definition:**  
+A deeper version of multi-turn where the model adapts its answers based on earlier inputs and assigned role.  
+Powerful for agents and virtual assistants.
 
-**Use Cases:**
-- Brainstorming
-- Storytelling
-- Metaphor generation
-
+**Example:**
 ```text
-Q: Calculate 15% of 240
-
-Path 1:  
-- 10% of 240 = 24  
-- 5% is half of 10% = 12  
-- Total: 24 + 12 = 36
-
-Path 2:  
-- Convert 15% to decimal: 0.15  
-- Multiply: 240 × 0.15 = 36
-
-Path 3:  
-- Break down into: (240 × 10/100) + (240 × 5/100)  
-- = 24 + 12  
-- = 36
+You are my shopping assistant.  
+User: Add a new grocery item: 'bananas'.  
+AI: Added bananas to your grocery list. Anything else?
 ```
 
 ---
