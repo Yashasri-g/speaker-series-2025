@@ -119,6 +119,7 @@ User: What's the capital of France?
 AI: Paris  
 User: How far is it from Berlin?  
 AI: Approximately 1,050 km by road.
+User: What is the best option to reach Berlin?
 ```
 
 ---
