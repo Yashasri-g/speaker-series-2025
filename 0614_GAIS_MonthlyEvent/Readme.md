@@ -155,12 +155,6 @@ Q: There are 10 apples. Alice eats 4, Bob eats 2. How many are left?
 Let's think step-by-step.
 ```
 
-**Bad Prompt:**
-```text
-10 apples, 4 eaten, 2 eaten. How many left?
-```
-**Why it's wrong:** Lacks reasoning guidance and structured format.
-
 ---
 
 ## 7. Prompt Chaining
