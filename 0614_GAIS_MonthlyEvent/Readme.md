@@ -196,6 +196,7 @@ Powerful for agents and virtual assistants.
 You are my shopping assistant.  
 User: Add a new grocery item: 'bananas'.  
 AI: Added bananas to your grocery list. Anything else?
+User : Add milk and eggs
 ```
 
 ---
