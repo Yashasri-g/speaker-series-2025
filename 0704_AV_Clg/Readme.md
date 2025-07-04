@@ -1,3 +1,116 @@
+# A.V. College Workshop – Transformers & LLMs
+
+📅 **Date:** 5th July 2025  
+🕙 **Time:** 11:30 AM onwards  
+📍 **Venue:** MBA Lab, A.V. College of Arts, Science and Commerce (Affiliated to Osmania University)
+
+**Speakers:**  
+- Sai Vamsi
+- Viswanatha Swamy
+- G Yashasri 
+
+---
+
+### 📚 Topics Covered
+
+1. Transformer Architecture  
+2. How LLMs like GPT use Transformers  
+3. LLM Training Process  
+4. Prompt Engineering 
+
+---
+
+### 🛠️ Tools & Technologies
+
+- Python, PyTorch / TensorFlow
+- Jupyter Notebook / Colab
+- Transformers Library (Hugging Face)
+- VS Code / Any IDE
+
+---
+
+## What is a Transformer?
+
+A **Transformer** is a special type of deep learning model that understands and processes language (text) by focusing on how words relate to each other in a sentence.
+
+It uses something called **attention**, which means it looks at **all the words at once** and figures out which words are important for understanding the meaning.
+
+---
+
+##  Why Do We Use Transformers?
+
+Before Transformers, models like RNNs and LSTMs read text word by word in order. They were **slow** and struggled with **long sentences**.
+
+Transformers changed this by:
+- Reading the whole sentence **at the same time**  
+- Finding important connections between words, no matter how far apart they are  
+- Being **faster** and **more accurate** for tasks like translation, summarization, chatting, and coding.
+
+---
+
+## Transformer Architecture
+
+The Transformer has two main parts:
+- **Encoder:** Understands the input sentence.
+- **Decoder:** Creates the output sentence.
+
+The secret power is **Self-Attention** — this lets the model compare every word with every other word.
+
+A Transformer layer has:
+- **Multi-Head Attention:** Looks at the sentence in different ways at the same time.
+- **Feed Forward Layer:** Helps process information better.
+- **Positional Encoding:** Adds the word order because the model reads the whole input at once.
+
+Transformers stack many of these layers to get better at understanding complex language.
+
+![Transformer Architecture](../images/transformer_architecture.png)
+
+---
+
+## How LLMs like GPT Use Transformers
+
+**GPT** (Generative Pre-trained Transformer) uses only the **Decoder** part.
+
+GPT works like this:
+- Reads some text and **predicts the next word** one by one.
+- Uses attention to check what has already been written.
+- It does not read future words — only past words.
+
+Example:
+- If you type: *“The capital of France is…”*  
+- GPT guesses the next word: *“Paris”*
+
+---
+
+## How LLMs Are Trained
+
+Training has **two steps**:
+
+**1. Pre-Training:**  
+- The model reads huge amounts of text (books, Wikipedia, web pages).
+- It learns grammar, facts, common sense.
+- The main goal is to predict missing or next words.
+
+**2️. Fine-Tuning:**  
+- After pre-training, the model is improved for special tasks like chatting politely or writing code.
+- Humans help by giving feedback — so the model learns to be more helpful and safe.
+
+Big LLMs like GPT have **billions of words** in their training data and use **lots of computing power** to learn patterns.
+
+---
+
+## 💡 Summary
+
+- **Transformers** are fast and understand text better than older models.
+- They use **attention** to find word relationships.
+- GPT uses Transformers to guess the next word and keep the conversation going.
+- Training happens in two parts: **Pre-training** (learns basics) and **Fine-tuning** (learns special skills).
+
+---
+
+### Prompt Engineering 
+--- 
+
 Prompting is the art of crafting clear instructions for AI models using natural language.  
 It helps guide the model’s reasoning, improve accuracy, and ensure structured and relevant responses.
 
@@ -163,19 +276,21 @@ User : Add milk and eggs
 
 ---
 
-## 🖼️ Resources for reference 
-1. [Prompt Engineering Guide – Covers fundamentals, techniques, and best practices.](https://www.promptingguide.ai/)
-2. [Prompt Engineering Tutorial – A beginner-friendly guide with practical examples.](https://www.tutorialspoint.com/prompt_engineering/index.html)
-3. [Basic Prompt Engineering – Explains different prompting techniques with examples.](https://aiengineering.academy/PromptEngineering/Basic_Prompting/)
+### 📌 Reference Material
+
+- [GeeksforGeeks – Getting Started with Transformers](https://www.geeksforgeeks.org/machine-learning/getting-started-with-transformers/)
+- [Hugging Face Transformers](https://huggingface.co/docs/transformers/index)
+- [Prompt Engineering Guide](https://www.promptingguide.ai/)
 
 ---
 
-## 🙌 Acknowledgements
+### 🙌 Organized By
 
-- **Organized by:** Global AI Secunderabad
-- **Supported by:** DotNet Learners House Hyderabad  
-- **Special thanks:** All participants and volunteers
-
+- **CDC, A.V. College**
+- In association with:  
+  - .NET Learners House  
+  - Global AI Secunderabad  
+  - SHYVN Tech
 ---
 
 ## 🔗 Stay Connected
@@ -185,4 +300,7 @@ User : Add milk and eggs
 - [Dot Net Learner House](https://www.meetup.com/dot-net-learners-house-hyderabad/)
 - Contact: yashasrigudhe@gmail.com
 
+---
+
+*Empowering the next generation of AI learners!* 🚀✨
 ---
