@@ -63,7 +63,7 @@ A Transformer layer has:
 
 Transformers stack many of these layers to get better at understanding complex language.
 
-![Transformer Architecture](../transformer_architecture.png)
+<img src="../transformer_architecture.png" alt="Transformer Architecture" width="400" height="300">
 
 ---
 
