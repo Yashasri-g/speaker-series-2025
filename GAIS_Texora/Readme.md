@@ -1,16 +1,15 @@
-````markdown name=README.md
 # Multi-Model Playground - ThinkSpace
 
-A **Streamlit application** that enables interaction with multiple AI models hosted on GitHub’s inference endpoint. This tool supports both **OpenAI models** and **Azure-hosted inference models**.
+A **Streamlit application** for interacting with multiple AI models hosted on GitHub’s inference endpoint. Supports both **OpenAI models** and **Azure-hosted inference models**.
 
-The application offers predefined **use cases** (such as topic explanation, translation, code debugging, business idea generation) and also allows custom prompts.
+This app provides predefined **use cases** (topic explanation, translation, code debugging, business idea generation) and supports custom prompts.
 
 ---
 
 ## Features
 
 - Run prompts on **multiple GitHub-hosted AI models** (OpenAI and Azure)
-- Predefined use cases (commonly used and specialized scenarios)
+- Predefined use cases for common and specialized scenarios
 - Custom prompt functionality
 - Secure token management via **Streamlit Secrets**
 - Unified interface for OpenAI and Azure SDKs
@@ -88,18 +87,18 @@ streamlit run app.py
 
 ## Default Use Cases
 
-- **Topic Explanation**: Simplify complex topics for broad understanding.
-- **Translation**: Translate text into various languages.
-- **Code Generation / Debugging**: Write or troubleshoot code snippets.
-- **Business Idea Generation**: Generate new business or startup ideas.
+- **Topic Explanation**: Simplify complex topics for broad understanding
+- **Translation**: Translate text into various languages
+- **Code Generation / Debugging**: Write or troubleshoot code snippets
+- **Business Idea Generation**: Generate new business or startup ideas
 
 ---
 
 ## Security
 
-- Tokens are **not hardcoded** in the source code.
-- Use **Streamlit Secrets Manager** or environment variables for sensitive information.
-- Do not commit `.streamlit/secrets.toml` or any file containing secrets to version control.
+- Tokens are **not hardcoded** in the source code
+- Use **Streamlit Secrets Manager** or environment variables for sensitive information
+- Do not commit `.streamlit/secrets.toml` or any file containing secrets to version control
 
 ---
 
@@ -115,5 +114,3 @@ streamlit run app.py
 ## License
 
 MIT License © 2025
-
-````
