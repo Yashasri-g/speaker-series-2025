@@ -1,84 +1,127 @@
+import os
 import streamlit as st
+from openai import OpenAI
 from azure.ai.inference import ChatCompletionsClient
-from azure.ai.inference.models import UserMessage, SystemMessage
+from azure.ai.inference.models import SystemMessage, UserMessage
 from azure.core.credentials import AzureKeyCredential
 
-# -------------------------------
-# Mapping models to secrets
-# -------------------------------
+# -----------------------------
+# MODEL CONFIGURATION
+# -----------------------------
 MODEL_CONFIG = {
-    "Azure GPT-4o Mini": {
+    # OpenAI models (via GitHub Models API)
+    "GitHub - GPT-4o-mini": {
         "id": "openai/gpt-4o-mini",
-        "token": "AZURE_4O_MINI_TOKEN",
+        "provider": "github"
     },
-    "Azure GPT-4o": {
+    "GitHub - GPT-4o": {
         "id": "openai/gpt-4o",
-        "token": "AZURE_4O_TOKEN",
+        "provider": "github"
     },
-    "Azure o4-mini": {
-        "id": "openai/o4-mini",
-        "token": "AZURE_O4_MINI_TOKEN",
+    "GitHub - o1-mini": {
+        "id": "openai/o1-mini",
+        "provider": "github"
     },
-    "Azure Llama-3.2-11B": {
-        "id": "meta-llama/Llama-3.2-11B-Vision-Instruct",
-        "token": "AZURE_LLAMA_TOKEN",
+
+    # Microsoft models (via GitHub Models API using Azure SDK)
+    "Microsoft - Phi-3.5-MoE": {
+        "id": "microsoft/phi-3.5-moe-instruct",
+        "provider": "azure"
     },
-    "Azure Phi-3.5-MoE": {
-        "id": "microsoft/Phi-3.5-MoE-instruct",
-        "token": "AZURE_PHI_TOKEN",
-    },
-    "OpenAI GPT-4o Mini": {
-        "id": "gpt-4o-mini",
-        "token": "OPENAI_4O_MINI_TOKEN",
-    },
-    "OpenAI GPT-4o": {
-        "id": "gpt-4o",
-        "token": "OPENAI_4O_TOKEN",
-    },
-    "OpenAI o4-mini": {
-        "id": "o4-mini",
-        "token": "OPENAI_O4_MINI_TOKEN",
-    },
+    "Microsoft - Phi-3-mini": {
+        "id": "microsoft/phi-3-mini-4k-instruct",
+        "provider": "azure"
+    }
 }
 
-# -------------------------------
-# Streamlit UI
-# -------------------------------
-st.set_page_config(page_title="AI Workbench", page_icon="🤖", layout="wide")
-st.title("🤖 AI Workbench")
-st.markdown("Choose a model and task, then enter your prompt.")
+# -----------------------------
+# STREAMLIT APP CONFIG
+# -----------------------------
+st.set_page_config(page_title="Texora", layout="centered")
+st.title("⚡ Texora - AI Playground")
 
-# Model selector
-model_choice = st.selectbox("Select Model", list(MODEL_CONFIG.keys()))
+st.markdown("Choose a model, set parameters, and run your prompt!")
 
-# Task selector
-task = st.radio(
-    "Choose a task",
-    ["Code Generator", "Translator", "Topic Explanation", "Research Assistant", "Custom Prompt"],
-)
+# -----------------------------
+# USER INPUT
+# -----------------------------
+task = st.radio("Select a task:", [
+    "Code Generator", "Translator", "Topic Explanation", "Research", "Custom Prompt"
+])
 
-# Input prompt
-prompt = st.text_area("Enter your prompt", height=150)
+prompt = st.text_area("✍️ Enter your prompt:", height=150)
 
+system_message = st.text_input("⚙️ System role (optional)", placeholder="e.g., You are a helpful assistant.")
+
+temperature = st.slider("Temperature", 0.0, 2.0, 1.0, 0.1)
+max_tokens = st.slider("Max tokens", 256, 4096, 1024, 128)
+top_p = st.slider("Top-p", 0.0, 1.0, 1.0, 0.1)
+
+model_choice = st.selectbox("Choose a model:", list(MODEL_CONFIG.keys()))
+
+# -----------------------------
+# RUN BUTTON
+# -----------------------------
 if st.button("Run"):
     if not prompt.strip():
-        st.warning("Please enter a prompt.")
+        st.warning("⚠️ Please enter a prompt.")
     else:
         config = MODEL_CONFIG[model_choice]
         model_id = config["id"]
-        token = st.secrets[config["token"]]  
+        provider = config["provider"]
 
-        
-        client = ChatCompletionsClient(
-            endpoint="https://models.inference.ai.azure.com", 
-            credential=AzureKeyCredential(token),
-        )
-        response = client.complete(
-            model=model_id,
-            messages=[SystemMessage("You are a helpful assistant."), UserMessage(prompt)],
-            temperature=1,
-            max_tokens=512,
-            top_p=1,
-        )
+        try:
+            # -----------------------------
+            # GitHub Models (OpenAI client)
+            # -----------------------------
+            if provider == "github":
+                client = OpenAI(
+                    base_url="https://models.github.ai/inference",
+                    api_key=os.environ["GITHUB_TOKEN"]
+                )
 
-        st.success(response.choices[0].message.content)
+                messages = []
+                if system_message:
+                    messages.append({"role": "system", "content": system_message})
+                messages.append({"role": "user", "content": prompt})
+
+                response = client.chat.completions.create(
+                    messages=messages,
+                    model=model_id,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                    top_p=top_p
+                )
+                output = response.choices[0].message.content
+
+            # -----------------------------
+            # Microsoft Models (Azure client)
+            # -----------------------------
+            elif provider == "azure":
+                client = ChatCompletionsClient(
+                    endpoint="https://models.github.ai/inference",
+                    credential=AzureKeyCredential(os.environ["GITHUB_TOKEN"])
+                )
+
+                messages = []
+                if system_message:
+                    messages.append(SystemMessage(system_message))
+                messages.append(UserMessage(prompt))
+
+                response = client.complete(
+                    messages=messages,
+                    model=model_id,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                    top_p=top_p
+                )
+                output = response.choices[0].message.content
+
+            # -----------------------------
+            # DISPLAY OUTPUT
+            # -----------------------------
+            st.success("✅ Response:")
+            st.write(output)
+
+        except Exception as e:
+            st.error(f"⚠️ Error: {e}")
