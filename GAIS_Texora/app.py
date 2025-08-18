@@ -1,127 +1,113 @@
-import os
 import streamlit as st
+import os
 from openai import OpenAI
 from azure.ai.inference import ChatCompletionsClient
-from azure.ai.inference.models import SystemMessage, UserMessage
+from azure.ai.inference.models import UserMessage, SystemMessage
 from azure.core.credentials import AzureKeyCredential
 
-# -----------------------------
-# MODEL CONFIGURATION
-# -----------------------------
+# ----------------------------
+# Model Configurations
+# ----------------------------
 MODEL_CONFIG = {
-    # OpenAI models (via GitHub Models API)
-    "GitHub - GPT-4o-mini": {
-        "id": "openai/gpt-4o-mini",
-        "provider": "github"
+    # --- OpenAI Inference SDK ---
+    "openai/gpt-4o-mini": {
+        "sdk": "openai",
+        "token_key": "GITHUB_TOKEN_4O_MINI",
     },
-    "GitHub - GPT-4o": {
-        "id": "openai/gpt-4o",
-        "provider": "github"
+    "openai/gpt-4o": {
+        "sdk": "openai",
+        "token_key": "GITHUB_TOKEN_4O",
     },
-    "GitHub - o1-mini": {
-        "id": "openai/o1-mini",
-        "provider": "github"
+    "openai/o4-mini": {
+        "sdk": "openai",
+        "token_key": "GITHUB_TOKEN_O4_MINI",
     },
 
-    # Microsoft models (via GitHub Models API using Azure SDK)
-    "Microsoft - Phi-3.5-MoE": {
-        "id": "microsoft/phi-3.5-moe-instruct",
-        "provider": "azure"
+    # --- Azure AI Inference SDK ---
+    "openai/gpt-4o-mini (Azure)": {
+        "sdk": "azure",
+        "token_key": "GITHUB_TOKEN_AZURE_4O_MINI",
+        "real_model": "openai/gpt-4o-mini",
     },
-    "Microsoft - Phi-3-mini": {
-        "id": "microsoft/phi-3-mini-4k-instruct",
-        "provider": "azure"
-    }
+    "openai/gpt-4o (Azure)": {
+        "sdk": "azure",
+        "token_key": "GITHUB_TOKEN_AZURE_4O",
+        "real_model": "openai/gpt-4o",
+    },
+    "openai/o4-mini (Azure)": {
+        "sdk": "azure",
+        "token_key": "GITHUB_TOKEN_AZURE_O4_MINI",
+        "real_model": "openai/o4-mini",
+    },
+    "meta/Llama-3.2-11B-Vision-Instruct": {
+        "sdk": "azure",
+        "token_key": "GITHUB_TOKEN_LLAMA",
+    },
+    "microsoft/Phi-3.5-MoE-instruct": {
+        "sdk": "azure",
+        "token_key": "GITHUB_TOKEN_PHI",
+    },
 }
 
-# -----------------------------
-# STREAMLIT APP CONFIG
-# -----------------------------
-st.set_page_config(page_title="Texora", layout="centered")
-st.title("⚡ Texora - AI Playground")
+# ----------------------------
+# Streamlit UI
+# ----------------------------
+st.set_page_config(page_title="Multi-Model Playground", layout="wide")
+st.title("🤖 Multi-Model Playground")
+st.write("Run prompts on multiple GitHub-hosted AI models (OpenAI + Azure).")
 
-st.markdown("Choose a model, set parameters, and run your prompt!")
+model_choice = st.selectbox("Choose a model", list(MODEL_CONFIG.keys()))
+prompt = st.text_area("Enter your prompt here:", "Explain the basics of machine learning.")
 
-# -----------------------------
-# USER INPUT
-# -----------------------------
-task = st.radio("Select a task:", [
-    "Code Generator", "Translator", "Topic Explanation", "Research", "Custom Prompt"
-])
-
-prompt = st.text_area("✍️ Enter your prompt:", height=150)
-
-system_message = st.text_input("⚙️ System role (optional)", placeholder="e.g., You are a helpful assistant.")
-
-temperature = st.slider("Temperature", 0.0, 2.0, 1.0, 0.1)
-max_tokens = st.slider("Max tokens", 256, 4096, 1024, 128)
-top_p = st.slider("Top-p", 0.0, 1.0, 1.0, 0.1)
-
-model_choice = st.selectbox("Choose a model:", list(MODEL_CONFIG.keys()))
-
-# -----------------------------
-# RUN BUTTON
-# -----------------------------
 if st.button("Run"):
-    if not prompt.strip():
-        st.warning("⚠️ Please enter a prompt.")
+    config = MODEL_CONFIG[model_choice]
+    token_key = config["token_key"]
+
+    # Check for token in secrets
+    if token_key not in st.secrets:
+        st.error(f"⚠️ Missing secret: `{token_key}`. Please add it in Streamlit → Settings → Secrets.")
     else:
-        config = MODEL_CONFIG[model_choice]
-        model_id = config["id"]
-        provider = config["provider"]
+        token = st.secrets[token_key]
 
         try:
-            # -----------------------------
-            # GitHub Models (OpenAI client)
-            # -----------------------------
-            if provider == "github":
+            # --- OpenAI SDK ---
+            if config["sdk"] == "openai":
                 client = OpenAI(
                     base_url="https://models.github.ai/inference",
-                    api_key=os.environ["GITHUB_TOKEN"]
+                    api_key=token,
                 )
-
-                messages = []
-                if system_message:
-                    messages.append({"role": "system", "content": system_message})
-                messages.append({"role": "user", "content": prompt})
-
                 response = client.chat.completions.create(
-                    messages=messages,
-                    model=model_id,
-                    temperature=temperature,
-                    max_tokens=max_tokens,
-                    top_p=top_p
+                    messages=[{"role": "user", "content": prompt}],
+                    model=model_choice,
+                    temperature=1,
+                    max_tokens=1024,
+                    top_p=1,
                 )
-                output = response.choices[0].message.content
+                st.subheader("✅ Response")
+                st.write(response.choices[0].message.content)
 
-            # -----------------------------
-            # Microsoft Models (Azure client)
-            # -----------------------------
-            elif provider == "azure":
+            # --- Azure SDK ---
+            elif config["sdk"] == "azure":
+                real_model = config.get("real_model", model_choice)
                 client = ChatCompletionsClient(
                     endpoint="https://models.github.ai/inference",
-                    credential=AzureKeyCredential(os.environ["GITHUB_TOKEN"])
+                    credential=AzureKeyCredential(token),
                 )
-
-                messages = []
-                if system_message:
-                    messages.append(SystemMessage(system_message))
-                messages.append(UserMessage(prompt))
-
                 response = client.complete(
-                    messages=messages,
-                    model=model_id,
-                    temperature=temperature,
-                    max_tokens=max_tokens,
-                    top_p=top_p
+                    messages=[UserMessage(prompt)],
+                    model=real_model,
+                    temperature=1,
+                    max_tokens=1024,
+                    top_p=1,
                 )
-                output = response.choices[0].message.content
-
-            # -----------------------------
-            # DISPLAY OUTPUT
-            # -----------------------------
-            st.success("✅ Response:")
-            st.write(output)
+                st.subheader("✅ Response")
+                st.write(response.choices[0].message.content)
 
         except Exception as e:
-            st.error(f"⚠️ Error: {e}")
+            st.error(f"❌ Error running {model_choice}: {str(e)}")
+
+# ----------------------------
+# Footer
+# ----------------------------
+st.markdown("---")
+st.caption("Built with Streamlit · Supports OpenAI + Azure AI models via GitHub Inference API")
