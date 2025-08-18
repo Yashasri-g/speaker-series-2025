@@ -70,7 +70,7 @@ USE_CASE_LABELS = {
 # Streamlit UI
 # ----------------------------
 st.set_page_config(page_title="Multi-Model Playground - ThinkSpace", layout="wide")
-st.title("🤖 Multi-Model Playground")
+st.title("🤖 Multi-Model Playground - ThinkSpace")
 st.write("Run prompts on multiple GitHub-hosted AI models (OpenAI + Azure).")
 
 # Model picker
