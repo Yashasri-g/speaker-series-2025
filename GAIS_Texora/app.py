@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 from openai import OpenAI
 from azure.ai.inference import ChatCompletionsClient
 from azure.ai.inference.models import UserMessage
@@ -59,6 +58,14 @@ USE_CASES = {
     "Business Idea Generation": "Suggest 3 innovative AI-based business ideas in the field of healthcare.",
 }
 
+USE_CASE_LABELS = {
+    "Topic Explanation": "Enter a topic or concept you want explained:",
+    "Translation": "Enter the text you want translated:",
+    "Code Generation / Debugging": "Paste code or describe the program to generate/fix:",
+    "Business Idea Generation": "Describe the domain/industry for which you want new ideas:",
+    "Custom Prompt": "Enter your custom prompt here:",
+}
+
 # ----------------------------
 # Streamlit UI
 # ----------------------------
@@ -66,15 +73,23 @@ st.set_page_config(page_title="Multi-Model Playground", layout="wide")
 st.title("🤖 Multi-Model Playground")
 st.write("Run prompts on multiple GitHub-hosted AI models (OpenAI + Azure).")
 
+# Model picker
 model_choice = st.selectbox("Choose a model", list(MODEL_CONFIG.keys()))
 
+# Use case + prompt
 use_case_choice = st.selectbox("Choose a use case", ["Custom Prompt"] + list(USE_CASES.keys()))
-if use_case_choice == "Custom Prompt":
-    prompt = st.text_area("Enter your custom prompt here:", "Explain the basics of machine learning.")
-else:
-    prompt = USE_CASES[use_case_choice]
-    st.info(f"🔎 Using pre-defined use case: **{use_case_choice}**")
+label = USE_CASE_LABELS.get(use_case_choice, "Enter your prompt:")
 
+if use_case_choice == "Custom Prompt":
+    prompt = st.text_area(label, "Explain the basics of machine learning.")
+else:
+    default_prompt = USE_CASES[use_case_choice]
+    prompt = st.text_area(label, default_prompt)
+    st.caption(f"💡 Example prompt provided for **{use_case_choice}**, but you can edit it.")
+
+# ----------------------------
+# Run button
+# ----------------------------
 if st.button("Run"):
     config = MODEL_CONFIG[model_choice]
     token_key = config["token_key"]
@@ -99,7 +114,7 @@ if st.button("Run"):
                     top_p=1,
                 )
                 st.subheader("✅ Response")
-                st.write(response.choices[0].message.content)
+                st.markdown(response.choices[0].message.content)
 
             # --- Azure SDK ---
             elif config["sdk"] == "azure":
@@ -116,7 +131,7 @@ if st.button("Run"):
                     top_p=1,
                 )
                 st.subheader("✅ Response")
-                st.write(response.choices[0].message.content)
+                st.markdown(response.choices[0].message.content)
 
         except Exception as e:
             st.error(f"❌ Error running {model_choice}: {str(e)}")
