@@ -2,7 +2,7 @@ import streamlit as st
 import os
 from openai import OpenAI
 from azure.ai.inference import ChatCompletionsClient
-from azure.ai.inference.models import UserMessage, SystemMessage
+from azure.ai.inference.models import UserMessage
 from azure.core.credentials import AzureKeyCredential
 
 # ----------------------------
@@ -50,6 +50,16 @@ MODEL_CONFIG = {
 }
 
 # ----------------------------
+# Default Use Cases
+# ----------------------------
+USE_CASES = {
+    "Topic Explanation": "Explain quantum computing in simple terms for a beginner.",
+    "Translation": "Translate the following English text into French:\n\n'Technology connects people across the world.'",
+    "Code Generation / Debugging": "Write a Python function to check if a number is prime. Also, fix this buggy code:\n\n```python\nfor i in range(5)\n    print(i)\n```",
+    "Business Idea Generation": "Suggest 3 innovative AI-based business ideas in the field of healthcare.",
+}
+
+# ----------------------------
 # Streamlit UI
 # ----------------------------
 st.set_page_config(page_title="Multi-Model Playground", layout="wide")
@@ -57,13 +67,18 @@ st.title("🤖 Multi-Model Playground")
 st.write("Run prompts on multiple GitHub-hosted AI models (OpenAI + Azure).")
 
 model_choice = st.selectbox("Choose a model", list(MODEL_CONFIG.keys()))
-prompt = st.text_area("Enter your prompt here:", "Explain the basics of machine learning.")
+
+use_case_choice = st.selectbox("Choose a use case", ["Custom Prompt"] + list(USE_CASES.keys()))
+if use_case_choice == "Custom Prompt":
+    prompt = st.text_area("Enter your custom prompt here:", "Explain the basics of machine learning.")
+else:
+    prompt = USE_CASES[use_case_choice]
+    st.info(f"🔎 Using pre-defined use case: **{use_case_choice}**")
 
 if st.button("Run"):
     config = MODEL_CONFIG[model_choice]
     token_key = config["token_key"]
 
-    # Check for token in secrets
     if token_key not in st.secrets:
         st.error(f"⚠️ Missing secret: `{token_key}`. Please add it in Streamlit → Settings → Secrets.")
     else:
