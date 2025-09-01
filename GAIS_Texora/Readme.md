@@ -22,7 +22,7 @@ This app provides predefined **use cases** (topic explanation, translation, code
 
 ```bash
 git clone https://github.com/Yashasri-g/GAIS_Texora.git
-cd multi-model-playground
+cd GAIS_Texora
 ```
 
 ### 2. Install Dependencies
