@@ -21,7 +21,7 @@ This app provides predefined **use cases** (topic explanation, translation, code
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/multi-model-playground.git
+git clone https://github.com/Yashasri-g/GAIS_Texora.git
 cd multi-model-playground
 ```
 
